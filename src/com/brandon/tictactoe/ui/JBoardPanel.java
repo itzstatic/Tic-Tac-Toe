@@ -14,7 +14,7 @@ public class JBoardPanel extends JPanel {
 
 	public void gameStart(int width, int height) {
 		squares = new JSquarePanel[width][height];
-		setLayout(new GridLayout(height, width, 5, 5));
+		setLayout(new GridLayout(height, width));
 		
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
@@ -37,7 +37,16 @@ public class JBoardPanel extends JPanel {
 		Move move = this.move;
 		this.move = null;
 		return move;
+	}	
+	
+	public void gameOver() {
+		for (int y = 0; y < squares[0].length; y++) {
+			for (int x = 0; x < squares.length; x++) {
+				remove(squares[x][y]);
+			}	
+		}
 	}
+	
 	
 	void setMove(int x, int y) {
 		move = new Move(x, y);

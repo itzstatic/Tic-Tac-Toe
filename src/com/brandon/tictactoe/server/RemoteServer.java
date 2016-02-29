@@ -95,7 +95,7 @@ public class RemoteServer implements Server, Closeable {
 	}
 	
 	@Override
-	public void gameOver() {
+	public void setGameOver() {
 		try {
 			close();
 		} catch (IOException e) {

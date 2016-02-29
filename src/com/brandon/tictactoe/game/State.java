@@ -12,20 +12,27 @@ public enum State {
 	
 	private int id;
 	
-	private State(int value) {
-		this.id = value;
+	private State(int id) {
+		if (id == -1) {
+			throw new IllegalArgumentException(Integer.toString(id));
+		}
+		this.id = id;
 	}
 	
-	public int serialize() {
-		return id;
-	}
-	
-	public static State deserialize(int value) {
+	public static State deserialize(int id) {
 		for (State state : State.values()) {
-			if (state.serialize() == value) {
+			if (state.id == id) {
 				return state;
 			}
 		}
 		return null;
+	}
+	
+	public static int serialize(State state) {
+		if (state == null) {
+			return -1;
+		} else {
+			return state.id;
+		}
 	}
 }

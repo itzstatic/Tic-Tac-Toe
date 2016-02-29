@@ -25,7 +25,7 @@ public class ScreenPlayGame extends SwingScreen {
 	
 	private Server server;
 	private ServerFactory serverFactory;
-	private boolean isGameOver;
+	private boolean isRunning;
 	
 	public ScreenPlayGame(JFrame frame) {
 		super(frame);
@@ -35,7 +35,7 @@ public class ScreenPlayGame extends SwingScreen {
 		
 		JButton btnMenu = new JButton("Menu");
 		btnMenu.addActionListener(e -> {
-			server.gameOver();
+			server.setGameOver();
 			gotoState("ScreenMainMenu");
 		});
 		lblState = new JLabel();
@@ -53,10 +53,13 @@ public class ScreenPlayGame extends SwingScreen {
 	}
 	
 	public void gameStart(int width, int height, int win) {
+		if (isRunning) {
+			return;
+		}
+		isRunning = true;
 		pnlBoard.gameStart(width, height);
 		lblWin.setText(Integer.toString(win));
 	}
-	
 	public void setBoard(State[][] board) {
 		pnlBoard.setBoard(board);
 	}
@@ -68,25 +71,33 @@ public class ScreenPlayGame extends SwingScreen {
 		return move;
 	}
 	public void gameOver(State winner) {
-		if (isGameOver) {
+		if (!isRunning) {
 			return;
 		}
-		isGameOver = true;
-		
+		isRunning = false;
+		showGameOverMessage(winner);
+		pnlBoard.gameOver();
+		gotoState("ScreenMainMenu");
+	}
+	
+	private void showGameOverMessage(State winner) {
 		String message;
-		if (winner == State.EMPTY) {
+		if (winner == null) {
+			message = "Forfeit.";
+		}else if (winner == State.EMPTY) {
 			message = "It's a tie!";
 		} else {
 			message = winner.toString() + " wins!";
 		}
+		
 		JOptionPane.showMessageDialog(
 			getFrame(), 
 			message,
 			"Game over", 
 			JOptionPane.INFORMATION_MESSAGE
 		);
-		gotoState("ScreenMainMenu");
 	}
+	
 	public void setServerFactory(ServerFactory factory) {
 		serverFactory = factory;
 	}
@@ -95,6 +106,7 @@ public class ScreenPlayGame extends SwingScreen {
 	public void onEntry(StateTransition e) {
 		super.onEntry(e);
 		server = serverFactory.createServer(this, stateMachine);
+		lblState.setText("");
 	}
 	
 	@Override

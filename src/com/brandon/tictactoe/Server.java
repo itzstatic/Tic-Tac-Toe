@@ -10,5 +10,5 @@ public interface Server {
 	
 	void update();
 	boolean isGameOver();
-	void gameOver();
+	void setGameOver();
 }

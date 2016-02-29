@@ -50,7 +50,7 @@ public class LocalServer implements Server {
 		
 		//game over check
 		if (game.isGameOver()) {
-			gameOver();
+			setGameOver();
 			return;
 		}
 		
@@ -63,7 +63,7 @@ public class LocalServer implements Server {
 		return game.isGameOver();
 	}
 
-	public void gameOver() {
+	public void setGameOver() {
 		State winner = game.getWinner();
 		State[][] board = game.getBoard();
 		players[0].setBoard(board);
