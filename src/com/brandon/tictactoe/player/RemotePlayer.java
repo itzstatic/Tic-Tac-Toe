@@ -35,7 +35,7 @@ public class RemotePlayer implements Player, Closeable {
 	private void writeBoard(State[][] board) throws IOException {
 		for (int x = 0; x < board.length; x++) {
 			for (int y = 0; y < board[0].length; y++) {
-				out.write(board[x][y].getValue());
+				out.write(board[x][y].serialize());
 			}
 		}
 	}
@@ -56,7 +56,7 @@ public class RemotePlayer implements Player, Closeable {
 			out.write(width);
 			out.write(height);
 			out.write(win);
-			out.write(you.getValue());
+			out.write(you.serialize());
 			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -91,7 +91,7 @@ public class RemotePlayer implements Player, Closeable {
 	public void gameOver(State winner) {
 		try {
 			out.write(Server.GAME_OVER);
-			out.write(winner.getValue());
+			out.write(winner.serialize());
 			out.flush();
 			in.read();
 			close();

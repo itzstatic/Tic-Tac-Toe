@@ -1,7 +1,5 @@
 package com.brandon.tictactoe.ui;
 
-import io.github.itzstatic.util.ui.screen.Screen;
-
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.LayoutManager;
@@ -10,7 +8,9 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-public abstract class SwingScreen extends Screen {
+import org.teamresistance.util.state.StateTransition;
+
+public abstract class SwingScreen extends LinkedScreen {
 
 	private JFrame frame;
 	private List<Component> components;
@@ -36,7 +36,7 @@ public abstract class SwingScreen extends Screen {
 	}
 	
 	@Override
-	protected void onShow() {
+	public void onEntry(StateTransition e) {
 		frame.setLayout(layout);
 		for (Component component : components) {
 			frame.add(component);
@@ -47,7 +47,7 @@ public abstract class SwingScreen extends Screen {
 	}
 
 	@Override
-	protected void onHide() {
+	public void onExit(StateTransition e) {
 		frame.setLayout(new FlowLayout());
 		for (Component component : components) {
 			frame.remove(component);

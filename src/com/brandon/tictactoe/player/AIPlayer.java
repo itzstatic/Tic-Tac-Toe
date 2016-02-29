@@ -34,6 +34,6 @@ public class AIPlayer implements Player {
 
 	@Override
 	public void gameOver(State winner) {
-		System.out.println("AI senses game over.");
+		
 	}
 }

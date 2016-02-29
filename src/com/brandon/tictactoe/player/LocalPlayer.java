@@ -13,14 +13,16 @@ import com.brandon.tictactoe.ui.screen.ScreenPlayGame;
 public class LocalPlayer implements Player {
 
 	private ScreenPlayGame scrnPlay;
+	private State state;
 	
-	public LocalPlayer(ScreenPlayGame scrnPlay) {
-		this.scrnPlay = scrnPlay;
+	public LocalPlayer(ScreenPlayGame spg) {
+		scrnPlay = spg;
 	}
 	
 	@Override
 	public void gameStart(int width, int height, int win, State you) {
-		
+		state = you;
+		scrnPlay.gameStart(width, height, win);
 	}
 	
 	@Override
@@ -30,14 +32,11 @@ public class LocalPlayer implements Player {
 	
 	@Override
 	public Move getMove() {
-		scrnPlay.setEnabled(true);
-		Move move = scrnPlay.getMove();
-		scrnPlay.setEnabled(false);
-		return move;
+		return scrnPlay.getMove(state);
 	}
 
 	@Override
 	public void gameOver(State winner) {
-		
+		scrnPlay.gameOver(winner);
 	}
 }

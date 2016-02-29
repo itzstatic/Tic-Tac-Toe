@@ -39,7 +39,7 @@ public class RemoteServer implements Server, Closeable {
 			width = in.read();
 			height = in.read();
 			int win = in.read();
-			State state = State.get(in.read());
+			State state = State.deserialize(in.read());
 			player.gameStart(width, height, win, state);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -50,7 +50,7 @@ public class RemoteServer implements Server, Closeable {
 		State[][] board = new State[width][height];
 		for (int x = 0; x < board.length; x++) {
 			for (int y = 0; y < board[0].length; y++) {
-				board[x][y] = State.get(in.read());
+				board[x][y] = State.deserialize(in.read());
 			}
 		}
 		return board;
@@ -70,7 +70,7 @@ public class RemoteServer implements Server, Closeable {
 				player.setBoard(readBoard());
 				break;
 			case GAME_OVER:
-				winner = State.get(in.read());
+				winner = State.deserialize(in.read());
 				player.gameOver(winner);
 				out.write(0);
 				out.flush();
@@ -92,5 +92,14 @@ public class RemoteServer implements Server, Closeable {
 	@Override
 	public boolean isGameOver() {
 		return winner != null;
+	}
+	
+	@Override
+	public void gameOver() {
+		try {
+			close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

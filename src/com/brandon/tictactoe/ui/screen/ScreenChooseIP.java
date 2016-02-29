@@ -1,6 +1,7 @@
 package com.brandon.tictactoe.ui.screen;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -11,33 +12,30 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.brandon.tictactoe.ui.GetScreen;
+import org.teamresistance.util.state.StateTransition;
 
-public class ScreenChooseIP extends GetScreen<InetAddress> {
+import com.brandon.tictactoe.ui.SwingScreen;
+
+public class ScreenChooseIP extends SwingScreen {
 
 	private JTextField txtIP;
+	private InetAddress ip;
 	
 	public ScreenChooseIP(JFrame frame) {
 		super(frame);
 		
 		JButton btnBack = new JButton("Back");
-		btnBack.addActionListener(e -> close(null));
+		btnBack.addActionListener(e -> previous());
 		
 		JButton btnNext = new JButton("Next");
-		btnNext.addActionListener(e -> {
-			InetAddress ip = validateIPv4();
-			if (ip == null) {
-				return;
-			}
-			close(ip);
-		});
+		btnNext.addActionListener(this::onEnter);
 		
 		JPanel pnlControls = new JPanel();
 		pnlControls.add(btnBack);
 		pnlControls.add(btnNext);
 		
-		txtIP = new JTextField();
-		txtIP.addActionListener(e -> btnNext.getActionListeners()[0].actionPerformed(e));
+		txtIP = new JTextField(16);
+		txtIP.addActionListener(this::onEnter);
 		
 		JPanel pnlIP = new JPanel();
 		pnlIP.add(new JLabel("IP: "));
@@ -49,39 +47,64 @@ public class ScreenChooseIP extends GetScreen<InetAddress> {
 		add(pnlControls);
 	}
 	
+	private void onEnter(ActionEvent e) {
+		ip = validateIPv4();
+		if (ip == null) {
+			return;
+		}
+		next();
+	}
+	
 	private InetAddress validateIPv4() {
-		String[] strings = txtIP.getText().split(".");
+		String[] strings = txtIP.getText().trim().split("\\.");
+		byte[] bytes = new byte[4];
 		
 		if (strings.length != 4) {
-			JOptionPane.showMessageDialog(getFrame(), "Invalid IP!", "Error!", JOptionPane.ERROR_MESSAGE);
-			txtIP.selectAll();
-			return null;
+			return showErrorDialog("Must have 4 bytes");
 		}
 		
-		
-		byte[] bytes = new byte[strings.length];
-		
 		for (int i = 0; i < strings.length; i++) {
+			int integer;
 			try {
-				bytes[i] = Byte.parseByte(strings[i].trim());
+				integer = Integer.parseInt(strings[i]);
 			} catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog(getFrame(), "Invalid IP!", "Error!", JOptionPane.ERROR_MESSAGE);
-				txtIP.selectAll();
-				return null;
+				return showErrorDialog(strings[i] + " is not numerical");
 			}
+			
+			if (integer < 0 || integer > 255) {
+				return showErrorDialog(integer + " must be between 0 and 255");
+			}
+			
+			bytes[i] = (byte) integer;
 		}
 		
 		try {
 			return InetAddress.getByAddress(bytes);
 		} catch (UnknownHostException e) {
-			JOptionPane.showMessageDialog(getFrame(), e.getMessage(), "Unknown Host!", JOptionPane.ERROR_MESSAGE);
-			txtIP.selectAll();
-			return null;
+			return showErrorDialog("Unknown Host");
 		}
+	}
+	
+	private InetAddress showErrorDialog(String message) {
+		JOptionPane.showMessageDialog(
+			getFrame(), 
+			message, 
+			"Error", 
+			JOptionPane.ERROR_MESSAGE);
+		txtIP.selectAll();
+		return null;
+	}
+	
+	public InetAddress getInetAddress() {
+		return ip;
 	}
 
 	@Override
-	public void update() {
-
+	public void onEntry(StateTransition e) {
+		super.onEntry(e);
+		txtIP.setText("");
+		txtIP.requestFocus();
+		ip = null;
 	}
+	
 }

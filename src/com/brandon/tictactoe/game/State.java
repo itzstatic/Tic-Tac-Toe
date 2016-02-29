@@ -10,19 +10,19 @@ public enum State {
 	O(1),
 	X(2);
 	
-	private int value;
+	private int id;
 	
 	private State(int value) {
-		this.value = value;
+		this.id = value;
 	}
 	
-	public int getValue() {
-		return value;
+	public int serialize() {
+		return id;
 	}
 	
-	public static State get(int value) {
+	public static State deserialize(int value) {
 		for (State state : State.values()) {
-			if (state.getValue() == value) {
+			if (state.serialize() == value) {
 				return state;
 			}
 		}

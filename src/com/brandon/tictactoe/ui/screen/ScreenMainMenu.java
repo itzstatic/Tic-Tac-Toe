@@ -2,56 +2,46 @@ package com.brandon.tictactoe.ui.screen;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import com.brandon.tictactoe.Flow;
-import com.brandon.tictactoe.Player;
-import com.brandon.tictactoe.Server;
-import com.brandon.tictactoe.flow.FlowGetScreen;
-import com.brandon.tictactoe.flow.Wrapper;
-import com.brandon.tictactoe.game.Game;
-import com.brandon.tictactoe.player.AIPlayer;
-import com.brandon.tictactoe.player.LocalPlayer;
-import com.brandon.tictactoe.server.LocalServer;
+import com.brandon.tictactoe.ServerFactory;
+import com.brandon.tictactoe.factory.HotseatServerFactory;
+import com.brandon.tictactoe.factory.SingleplayerServerFactory;
+import com.brandon.tictactoe.ui.LinkedScreen;
 import com.brandon.tictactoe.ui.SwingScreen;
 
-
 public class ScreenMainMenu extends SwingScreen {
+	
+	private ServerFactory single, hotseat;
 	
 	public ScreenMainMenu(JFrame frame) {
 		super(frame);
 		
+		single = new SingleplayerServerFactory();
+		hotseat = new HotseatServerFactory();
+		
 		JButton btnSingle = new JButton("Singleplayer");
-		btnSingle.setPreferredSize(new Dimension(200, 60));
-		btnSingle.addActionListener(e -> {
-			playLocalGame(frame, new ScreenPlayGame(frame), new AIPlayer());
-		});
+		btnSingle.addActionListener(this::playSingleplayer);
 
 		JButton btnMulti = new JButton("Multiplayer");
-		btnMulti.setPreferredSize(new Dimension(200, 60));
 		btnMulti.addActionListener(e -> {
-			super.setScreen(new ScreenMultiMenu(frame));
+			gotoState("ScreenMultiMenu");
 		});
 		
 		JButton btnHotseat = new JButton("Hotseat");
-		btnHotseat.setPreferredSize(new Dimension(200, 60));
-		btnHotseat.addActionListener(e -> {
-			ScreenPlayGame spg = new ScreenPlayGame(frame);
-			playLocalGame(frame, spg, new LocalPlayer(spg));
-		});
+		btnHotseat.addActionListener(this::playHotseat);
 		
 		JButton btnExit = new JButton("Exit");
-		btnExit.setPreferredSize(new Dimension(200, 60));
 		btnExit.addActionListener(e -> {
 			System.exit(0);
 		});
 		
 		JLabel lblTitle = new JLabel("Tic Tac Toe");
-		lblTitle.setPreferredSize(new Dimension(100, 60));
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		setLayout(new GridLayout(5, 1));
@@ -62,27 +52,23 @@ public class ScreenMainMenu extends SwingScreen {
 		add(btnExit);
 	}
 	
-	private void playLocalGame(JFrame frame, ScreenPlayGame spg, Player opponent) {
-		Wrapper<Game> game = new Wrapper<>();
-		Flow flow = new Flow();
-		flow.add(new FlowGetScreen<>(this, new ScreenCreateGame(frame), game));
-		flow.add(() -> {
-			Server server = new LocalServer(
-				game.get(),
-				new LocalPlayer(spg),
-				opponent
-			);
-			spg.setServer(server);
-			setScreen(spg);
-			return true;
-		});
-		new Thread(flow).start();
+	private void playSingleplayer(ActionEvent e) {
+		((ScreenPlayGame) stateMachine.getState("ScreenPlayGame")).setServerFactory(single);
+		play();
 	}
-
-	@Override
-	public void update() {
-		
+	
+	private void playHotseat(ActionEvent e) {
+		((ScreenPlayGame) stateMachine.getState("ScreenPlayGame")).setServerFactory(hotseat);
+		play();
 	}
-
+	
+	private void play() {
+		LinkedScreen.link(
+			this,
+			(LinkedScreen) stateMachine.getState("ScreenCreateGame"),
+			(LinkedScreen) stateMachine.getState("ScreenPlayGame")
+		);
+		next();
+	}
 	
 }

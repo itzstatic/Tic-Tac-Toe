@@ -1,6 +1,8 @@
 
 package com.brandon.tictactoe;
 
+
+
 public interface Server {
 	int MOVE = 0;
 	int GAME_OVER = 1;
@@ -8,4 +10,5 @@ public interface Server {
 	
 	void update();
 	boolean isGameOver();
+	void gameOver();
 }

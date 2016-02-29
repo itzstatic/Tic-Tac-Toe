@@ -33,7 +33,6 @@ public class LocalServer implements Server {
 	
 	@Override
 	public void update() {
-		Move move;
 		State[][] board = game.getBoard();
 		
 		//update both player's boards
@@ -41,21 +40,17 @@ public class LocalServer implements Server {
 		players[1].setBoard(board);
 		
 		//get a legal move
+		Move move;
 		do {
 			move = players[current].getMove();
 		} while (!game.isInBounds(move) || !game.isEmpty(move));
 		
 		//make a move with the state associated with the player
 		game.setMove(move, states[current]);
-	
+		
 		//game over check
 		if (game.isGameOver()) {
-			State winner = game.getWinner();
-			board = game.getBoard();
-			players[0].setBoard(board);
-			players[0].gameOver(winner);
-			players[1].setBoard(board);
-			players[1].gameOver(winner);
+			gameOver();
 			return;
 		}
 		
@@ -66,5 +61,14 @@ public class LocalServer implements Server {
 	@Override
 	public boolean isGameOver() {
 		return game.isGameOver();
+	}
+
+	public void gameOver() {
+		State winner = game.getWinner();
+		State[][] board = game.getBoard();
+		players[0].setBoard(board);
+		players[1].setBoard(board);
+		players[0].gameOver(winner);
+		players[1].gameOver(winner);
 	}
 }

@@ -28,20 +28,20 @@ public class Test {
 		new Thread(app::startClient).start();
 	}
 	
-	private void playServer(Server server) {
+	public void playServer(Server server) {
 		while (!server.isGameOver()) {
 			server.update();
 		}
 	}
 	
-	private void startServer() {
+	public void startServer() {
 		Game game = new Game(3, 3, 3);
 		Player p0 = new TestPlayer("Brandon", sc);
 		Player p1 = new RemotePlayer(port);
 		Server server = new LocalServer(game, p0, p1);
 		playServer(server);
 	}
-	private void startClient() {
+	public void startClient() {
 		Player test = new TestPlayer("Andres", sc);
 		InetAddress ip;
 		try {

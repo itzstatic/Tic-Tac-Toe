@@ -1,36 +1,45 @@
 package com.brandon.tictactoe.ui;
 
-import javax.swing.JButton;
+import java.awt.GridLayout;
+
 import javax.swing.JPanel;
 
 import com.brandon.tictactoe.game.Move;
-import com.brandon.tictactoe.ui.screen.ScreenPlayGame;
+import com.brandon.tictactoe.game.State;
 
 public class JBoardPanel extends JPanel {
 	
-	private JButton[][] btnSquares;
+	private JSquarePanel[][] squares;
 	private volatile Move move;
+
+	public void gameStart(int width, int height) {
+		squares = new JSquarePanel[width][height];
+		setLayout(new GridLayout(height, width, 5, 5));
+		
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				squares[x][y] = new JSquarePanel(this, x, y);
+				add(squares[x][y]);
+			}	
+		}
+	}
 	
-	public JBoardPanel(ScreenPlayGame scrnPlay, int dim) {
-		btnSquares = new JButton[dim][dim];
-		for (int x = 0; x < dim; x++) {
-			for (int y = 0; y < dim; y++) {
-				btnSquares[x][y] = newJButton(x, y);
+	public void setBoard(State[][] board) {
+		for (int x = 0; x < board.length; x++) {
+			for (int y = 0; y < board[0].length; y++) {
+				squares[x][y].setState(board[x][y]);
 			}
 		}
 	}
 	
-	private JButton newJButton(int x, int y) {
-		JButton button = new JButton();
-		button.addActionListener(e -> move = new Move(x, y));
-		return button;
-	}
-	
 	public Move getMove() {
 		while (move == null);
-		Move m = move;
-		move = null;
-		return m;
+		Move move = this.move;
+		this.move = null;
+		return move;
 	}
 	
+	void setMove(int x, int y) {
+		move = new Move(x, y);
+	}
 }

@@ -4,9 +4,14 @@ import java.awt.GridLayout;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.teamresistance.util.state.StateTransition;
+
 import com.brandon.tictactoe.Server;
+import com.brandon.tictactoe.ServerFactory;
 import com.brandon.tictactoe.game.Move;
 import com.brandon.tictactoe.game.State;
 import com.brandon.tictactoe.ui.JBoardPanel;
@@ -15,52 +20,89 @@ import com.brandon.tictactoe.ui.SwingScreen;
 public class ScreenPlayGame extends SwingScreen {
 
 	private JBoardPanel pnlBoard;
-	private JPanel pnlControls;
-	
-	private JButton btnMenu;
+	private JLabel lblState;
+	private JLabel lblWin;
 	
 	private Server server;
+	private ServerFactory serverFactory;
+	private boolean isGameOver;
 	
 	public ScreenPlayGame(JFrame frame) {
 		super(frame);
 		
-		pnlControls = new JPanel();
-		btnMenu = new JButton("Menu");
+		JPanel pnlControls = new JPanel();
+		pnlBoard = new JBoardPanel();
+		
+		JButton btnMenu = new JButton("Menu");
 		btnMenu.addActionListener(e -> {
-			super.setScreen(new ScreenMainMenu(frame));
+			server.gameOver();
+			gotoState("ScreenMainMenu");
 		});
+		lblState = new JLabel();
+		lblWin = new JLabel();
+		
 		pnlControls.add(btnMenu);
+		pnlControls.add(new JLabel("Player: "));
+		pnlControls.add(lblState);
+		pnlControls.add(new JLabel("To win: "));
+		pnlControls.add(lblWin);
 		
 		setLayout(new GridLayout(2, 1));
 		add(pnlBoard);
 		add(pnlControls);
 	}
 	
-	public void setServer(Server server) {
-		this.server = server;
+	public void gameStart(int width, int height, int win) {
+		pnlBoard.gameStart(width, height);
+		lblWin.setText(Integer.toString(win));
 	}
-
+	
 	public void setBoard(State[][] board) {
-		for (int x = 0; x < board.length; x++) {
-			for(int y = 0; y < board[0].length; y++) {
-				
-			}
+		pnlBoard.setBoard(board);
+	}
+	public Move getMove(State state) {
+		lblState.setText(state.toString());
+		pnlBoard.setEnabled(true);
+		Move move = pnlBoard.getMove();
+		pnlBoard.setEnabled(false);
+		return move;
+	}
+	public void gameOver(State winner) {
+		if (isGameOver) {
+			return;
 		}
-	}
-	
-	public Move getMove() {
+		isGameOver = true;
 		
+		String message;
+		if (winner == State.EMPTY) {
+			message = "It's a tie!";
+		} else {
+			message = winner.toString() + " wins!";
+		}
+		JOptionPane.showMessageDialog(
+			getFrame(), 
+			message,
+			"Game over", 
+			JOptionPane.INFORMATION_MESSAGE
+		);
+		gotoState("ScreenMainMenu");
+	}
+	public void setServerFactory(ServerFactory factory) {
+		serverFactory = factory;
 	}
 	
-	public void setEnabled(boolean b) {
-		pnlBoard.setEnabled(b);
+	@Override
+	public void onEntry(StateTransition e) {
+		super.onEntry(e);
+		server = serverFactory.createServer(this, stateMachine);
 	}
 	
 	@Override
 	public void update() {
-		if (server.isGameOver()) {
-			
-		} else {
+		if (server == null) {
+			return;
+		}
+		if (!server.isGameOver()) {
 			server.update();
 		}
 	}
