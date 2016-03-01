@@ -19,6 +19,9 @@ public class Game {
 		if (win > min) {
 			throw new IllegalArgumentException(win + " > " + min);
 		}
+		if (min < 1) {
+			throw new IllegalArgumentException(min + " < " + 1);
+		}
 		
 		this.win = win;
 		winner = null;

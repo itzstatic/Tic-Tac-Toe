@@ -8,8 +8,8 @@ public abstract class UpdatableApplication implements Runnable {
 	
 	public abstract void update();
 	
-	public UpdatableApplication(double timePeriod) {
-		this.timePeriod = timePeriod;
+	public UpdatableApplication(TimeStrategy time) {
+		this.timePeriod = time.getTimePeriod();
 	}
 	
 	public boolean isRunning() {
@@ -19,11 +19,12 @@ public abstract class UpdatableApplication implements Runnable {
 	public void run() {
 		isRunning = true;
 		
+		double initialTime;
 		while (isRunning) {
-			double initialTime = Time.getTime();
-			while (Time.getTime() - initialTime < timePeriod);
+			initialTime = Time.getTime();
 			Time.update();
 			update();
+			while (Time.getTime() - initialTime < timePeriod);
 		}
 	}
 	

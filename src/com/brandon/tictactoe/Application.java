@@ -11,8 +11,7 @@ import com.brandon.tictactoe.ui.screen.ScreenMainMenu;
 import com.brandon.tictactoe.ui.screen.ScreenMultiMenu;
 import com.brandon.tictactoe.ui.screen.ScreenPlayGame;
 import com.brandon.util.app.UpdatableApplication;
-
-
+import com.brandon.util.app.time.TimeFrequency;
 
 public class Application extends UpdatableApplication {
 	
@@ -20,7 +19,8 @@ public class Application extends UpdatableApplication {
 	private JFrame frame;
 	
 	public Application() {
-		super(1D / 30D);
+		super(new TimeFrequency(30));
+		
 		frame = new JFrame("Tic Tac Toe");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1080, 1280);
