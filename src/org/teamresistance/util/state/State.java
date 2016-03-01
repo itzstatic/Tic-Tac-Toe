@@ -24,10 +24,11 @@ public abstract class State {
 	/**
 	 * Sets the state of this State's state machine to an instance with the specified name.
 	 * @param stateName the name of the state
-	 * @return true if and only if the state of the state machine was changed.
+	 * @throws NullPointerException if stateName was null.
+	 * @throws RuntimeException if this state's machine did not contain a state of the specified name.
 	 */
-	final protected boolean gotoState(String stateName) {
-		return stateMachine.setState(stateName);
+	final protected void gotoState(String stateName) {
+		stateMachine.setState(stateName);
 	}
 	
 	public String getName() {
