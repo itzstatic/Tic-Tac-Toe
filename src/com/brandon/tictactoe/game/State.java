@@ -4,7 +4,7 @@ public enum State {
 	EMPTY(0){
 		@Override
 		public String toString() {
-			return "-";
+			return " ";
 		}
 	},
 	O(1),
