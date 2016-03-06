@@ -1,6 +1,9 @@
 package com.brandon.tictactoe.ui.screen;
 
 import java.awt.GridLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,23 +21,36 @@ import com.brandon.tictactoe.ui.SwingScreen;
 
 public class ScreenPlayGame extends SwingScreen {
 
+	private static final Move IDLE = new Move(0, 0);
+	
 	private JBoardPanel pnlBoard;
 	private JLabel lblState;
 	private JLabel lblWin;
+	private WindowListener serverCloser;
 	
 	private Server server;
 	private boolean isRunning;
+	private boolean exiting;
 	private volatile Move move;
 	
 	public ScreenPlayGame(JFrame frame) {
 		super(frame);
+		move = IDLE;
+		
+		serverCloser = new WindowAdapter(){
+			@Override
+			public void windowClosing(WindowEvent e) {
+				move = null;
+				exiting = true;
+			}
+		};
 		
 		JPanel pnlControls = new JPanel();
 		pnlBoard = new JBoardPanel(this);
 		
 		JButton btnMenu = new JButton("Menu");
 		btnMenu.addActionListener(e -> {
-			move = new Move(-1, -1);
+			move = null;
 		});
 		lblState = new JLabel();
 		lblWin = new JLabel();
@@ -54,9 +70,9 @@ public class ScreenPlayGame extends SwingScreen {
 		if (isRunning) {
 			return;
 		}
-		isRunning = true;
 		pnlBoard.gameStart(width, height);
 		lblWin.setText(Integer.toString(win));
+		isRunning = true;
 	}
 	public void setBoard(State[][] board) {
 		pnlBoard.setBoard(board);
@@ -65,9 +81,9 @@ public class ScreenPlayGame extends SwingScreen {
 		lblState.setText(state.toString());
 		pnlBoard.setEnabled(true);
 		
-		while(move == null);
+		while(this.move == IDLE);
 		Move move = this.move;
-		this.move = null;
+		this.move = IDLE;
 		
 		pnlBoard.setEnabled(false);
 		lblState.setText(State.not(state).toString());
@@ -79,6 +95,9 @@ public class ScreenPlayGame extends SwingScreen {
 		}
 		isRunning = false;
 		showGameOverMessage(winner);
+		if (exiting) {
+			System.exit(0);
+		}
 		pnlBoard.gameOver();
 		gotoState("ScreenMainMenu");
 	}
@@ -112,6 +131,8 @@ public class ScreenPlayGame extends SwingScreen {
 	@Override
 	public void onEntry(StateTransition e) {
 		super.onEntry(e);
+		getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		getFrame().addWindowListener(serverCloser);
 		server.start();
 	}
 	
@@ -120,5 +141,12 @@ public class ScreenPlayGame extends SwingScreen {
 		if (isRunning && !server.isGameOver()) {
 			server.update();
 		}
+	}
+	
+	@Override
+	public void onExit(StateTransition e) {
+		super.onExit(e);
+		getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		getFrame().removeWindowListener(serverCloser);
 	}
 }

@@ -24,7 +24,6 @@ public class Application extends UpdatableApplication {
 		
 		frame = new JFrame("Tic Tac Toe");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(1080, 1280);
 		frame.setVisible(true);
 		
 		screenMachine = new StateMachine();

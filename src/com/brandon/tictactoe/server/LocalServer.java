@@ -13,8 +13,6 @@ import com.brandon.tictactoe.game.Move;
  */
 public class LocalServer implements Server {
 
-	private final static Move FORFEIT = new Move(-1, -1);
-	
 	private Game game;
 	private Player[] players;
 	private State[] states;
@@ -48,7 +46,7 @@ public class LocalServer implements Server {
 		Move move;
 		do {
 			move = players[current].getMove();
-			if (move.equals(FORFEIT)) {
+			if (move == null) {
 				players[0].gameOver(null);
 				players[1].gameOver(null);
 				return;
