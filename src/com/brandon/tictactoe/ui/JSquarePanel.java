@@ -5,6 +5,7 @@ import javax.swing.JButton;
 import com.brandon.tictactoe.game.State;
 
 
+@SuppressWarnings("serial")
 public class JSquarePanel extends JButton {
 	
 	public JSquarePanel(JBoardPanel pnlBoard, int x, int y) {

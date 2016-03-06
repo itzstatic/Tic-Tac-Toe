@@ -1,8 +1,8 @@
 package com.brandon.tictactoe.player;
 
 import com.brandon.tictactoe.Player;
-import com.brandon.tictactoe.game.Move;
 import com.brandon.tictactoe.game.State;
+import com.brandon.tictactoe.game.Move;
 import com.brandon.tictactoe.ui.screen.ScreenPlayGame;
 
 /**

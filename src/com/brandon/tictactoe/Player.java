@@ -1,7 +1,7 @@
 package com.brandon.tictactoe;
 
-import com.brandon.tictactoe.game.Move;
 import com.brandon.tictactoe.game.State;
+import com.brandon.tictactoe.game.Move;
 
 
 

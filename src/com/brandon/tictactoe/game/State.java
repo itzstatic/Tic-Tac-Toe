@@ -19,13 +19,24 @@ public enum State {
 		this.id = id;
 	}
 	
+	public static State not(State state) {
+		switch (state) {
+		case X: return O;
+		case O: return X;
+		default: throw new IllegalArgumentException(state.toString());
+		}
+	}
+	
 	public static State deserialize(int id) {
+		if (id == -1) {
+			return null;
+		}
 		for (State state : State.values()) {
 			if (state.id == id) {
 				return state;
 			}
 		}
-		return null;
+		throw new IllegalArgumentException(Integer.toString(id));
 	}
 	
 	public static int serialize(State state) {

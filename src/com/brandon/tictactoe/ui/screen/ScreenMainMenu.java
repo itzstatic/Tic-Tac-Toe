@@ -52,12 +52,12 @@ public class ScreenMainMenu extends SwingScreen {
 	}
 	
 	private void playSingleplayer(ActionEvent e) {
-		((ScreenPlayGame) stateMachine.getState("ScreenPlayGame")).setServerFactory(single);
+		((ScreenWait) stateMachine.getState("ScreenWait")).setServerFactory(single);
 		play();
 	}
 	
 	private void playHotseat(ActionEvent e) {
-		((ScreenPlayGame) stateMachine.getState("ScreenPlayGame")).setServerFactory(hotseat);
+		((ScreenWait) stateMachine.getState("ScreenWait")).setServerFactory(hotseat);
 		play();
 	}
 	
@@ -65,6 +65,7 @@ public class ScreenMainMenu extends SwingScreen {
 		LinkedScreen.link(
 			this,
 			(LinkedScreen) stateMachine.getState("ScreenCreateGame"),
+			(LinkedScreen) stateMachine.getState("ScreenWait"),
 			(LinkedScreen) stateMachine.getState("ScreenPlayGame")
 		);
 		next();

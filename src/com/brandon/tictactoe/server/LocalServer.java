@@ -3,8 +3,8 @@ package com.brandon.tictactoe.server;
 import com.brandon.tictactoe.Player;
 import com.brandon.tictactoe.Server;
 import com.brandon.tictactoe.game.Game;
-import com.brandon.tictactoe.game.Move;
 import com.brandon.tictactoe.game.State;
+import com.brandon.tictactoe.game.Move;
 
 /**
  * Runs the game rules on this machine.
@@ -13,6 +13,8 @@ import com.brandon.tictactoe.game.State;
  */
 public class LocalServer implements Server {
 
+	private final static Move FORFEIT = new Move(-1, -1);
+	
 	private Game game;
 	private Player[] players;
 	private State[] states;
@@ -23,7 +25,10 @@ public class LocalServer implements Server {
 		players = new Player[]{ playerO, playerX };
 		states = new State[]{ State.O, State.X };
 		current = 0;
-		
+	}
+	
+	@Override
+	public void start() {
 		int width = game.getWidth();
 		int height = game.getHeight();
 		int win = game.getWin();
@@ -43,6 +48,11 @@ public class LocalServer implements Server {
 		Move move;
 		do {
 			move = players[current].getMove();
+			if (move.equals(FORFEIT)) {
+				players[0].gameOver(null);
+				players[1].gameOver(null);
+				return;
+			}
 		} while (!game.isInBounds(move) || !game.isEmpty(move));
 		
 		//make a move with the state associated with the player
@@ -50,7 +60,12 @@ public class LocalServer implements Server {
 		
 		//game over check
 		if (game.isGameOver()) {
-			setGameOver();
+			State winner = game.getWinner();
+			board = game.getBoard();
+			players[0].setBoard(board);
+			players[1].setBoard(board);
+			players[0].gameOver(winner);
+			players[1].gameOver(winner);
 			return;
 		}
 		
@@ -63,12 +78,4 @@ public class LocalServer implements Server {
 		return game.isGameOver();
 	}
 
-	public void setGameOver() {
-		State winner = game.getWinner();
-		State[][] board = game.getBoard();
-		players[0].setBoard(board);
-		players[1].setBoard(board);
-		players[0].gameOver(winner);
-		players[1].gameOver(winner);
-	}
 }

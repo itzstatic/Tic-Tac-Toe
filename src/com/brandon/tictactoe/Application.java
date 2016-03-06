@@ -10,6 +10,7 @@ import com.brandon.tictactoe.ui.screen.ScreenCreateGame;
 import com.brandon.tictactoe.ui.screen.ScreenMainMenu;
 import com.brandon.tictactoe.ui.screen.ScreenMultiMenu;
 import com.brandon.tictactoe.ui.screen.ScreenPlayGame;
+import com.brandon.tictactoe.ui.screen.ScreenWait;
 import com.brandon.util.app.UpdatableApplication;
 import com.brandon.util.app.time.TimeFrequency;
 
@@ -33,6 +34,7 @@ public class Application extends UpdatableApplication {
 		screenMachine.addState(new ScreenMainMenu(frame));
 		screenMachine.addState(new ScreenMultiMenu(frame));
 		screenMachine.addState(new ScreenPlayGame(frame));
+		screenMachine.addState(new ScreenWait(frame));
 		screenMachine.setState("ScreenMainMenu");
 	}
 	

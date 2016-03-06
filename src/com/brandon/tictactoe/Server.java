@@ -8,7 +8,7 @@ public interface Server {
 	int GAME_OVER = 1;
 	int BOARD = 2;
 	
+	void start();
 	void update();
 	boolean isGameOver();
-	void setGameOver();
 }

@@ -41,25 +41,27 @@ public class ScreenMultiMenu extends SwingScreen {
 	}
 
 	private void hostServer(ActionEvent e) {
-		ScreenPlayGame spg = (ScreenPlayGame) stateMachine.getState("ScreenPlayGame");
-		spg.setServerFactory(host);
+		ScreenWait sw = (ScreenWait) stateMachine.getState("ScreenWait");
+		sw.setServerFactory(host);
 		LinkedScreen.link(
 			this,
 			(LinkedScreen) stateMachine.getState("ScreenCreateGame"),
 			(LinkedScreen) stateMachine.getState("ScreenChoosePort"),
-			spg
+			sw,
+			(LinkedScreen) stateMachine.getState("ScreenPlayGame")
 		);
 		next();
 	}
 	
 	private void joinServer(ActionEvent e) {
-		ScreenPlayGame spg = (ScreenPlayGame) stateMachine.getState("ScreenPlayGame");
-		spg.setServerFactory(join);
+		ScreenWait sw = (ScreenWait) stateMachine.getState("ScreenWait");
+		sw.setServerFactory(join);
 		LinkedScreen.link(
 			this,
 			(LinkedScreen) stateMachine.getState("ScreenChooseIP"),
 			(LinkedScreen) stateMachine.getState("ScreenChoosePort"),
-			spg
+			sw,
+			(LinkedScreen) stateMachine.getState("ScreenPlayGame")
 		);
 		next();
 	}

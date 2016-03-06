@@ -1,5 +1,6 @@
 package com.brandon.tictactoe.test;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Scanner;
@@ -37,8 +38,14 @@ public class Test {
 	public void startServer() {
 		Game game = new Game(3, 3, 3);
 		Player p0 = new TestPlayer("Brandon", sc);
-		Player p1 = new RemotePlayer(port);
+		RemotePlayer p1 = new RemotePlayer(port);
+		try {
+			p1.open();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		Server server = new LocalServer(game, p0, p1);
+		server.start();
 		playServer(server);
 	}
 	public void startClient() {
@@ -50,7 +57,13 @@ public class Test {
 			e.printStackTrace();
 			return;
 		}
-		Server server = new RemoteServer(ip, port, test);
+		RemoteServer server = new RemoteServer(test);
+		try {
+			server.open(ip, port);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		server.start();
 		playServer(server);
 	}
 

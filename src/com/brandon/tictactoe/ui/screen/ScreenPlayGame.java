@@ -11,7 +11,6 @@ import javax.swing.JPanel;
 import org.teamresistance.util.state.StateTransition;
 
 import com.brandon.tictactoe.Server;
-import com.brandon.tictactoe.ServerFactory;
 import com.brandon.tictactoe.game.Move;
 import com.brandon.tictactoe.game.State;
 import com.brandon.tictactoe.ui.JBoardPanel;
@@ -24,19 +23,18 @@ public class ScreenPlayGame extends SwingScreen {
 	private JLabel lblWin;
 	
 	private Server server;
-	private ServerFactory serverFactory;
 	private boolean isRunning;
+	private volatile Move move;
 	
 	public ScreenPlayGame(JFrame frame) {
 		super(frame);
 		
 		JPanel pnlControls = new JPanel();
-		pnlBoard = new JBoardPanel();
+		pnlBoard = new JBoardPanel(this);
 		
 		JButton btnMenu = new JButton("Menu");
 		btnMenu.addActionListener(e -> {
-			server.setGameOver();
-			gotoState("ScreenMainMenu");
+			move = new Move(-1, -1);
 		});
 		lblState = new JLabel();
 		lblWin = new JLabel();
@@ -66,8 +64,13 @@ public class ScreenPlayGame extends SwingScreen {
 	public Move getMove(State state) {
 		lblState.setText(state.toString());
 		pnlBoard.setEnabled(true);
-		Move move = pnlBoard.getMove();
+		
+		while(move == null);
+		Move move = this.move;
+		this.move = null;
+		
 		pnlBoard.setEnabled(false);
+		lblState.setText(State.not(state).toString());
 		return move;
 	}
 	public void gameOver(State winner) {
@@ -98,23 +101,23 @@ public class ScreenPlayGame extends SwingScreen {
 		);
 	}
 	
-	public void setServerFactory(ServerFactory factory) {
-		serverFactory = factory;
+	public void setServer(Server server) {
+		this.server = server;
+	}
+	
+	public void setMove(int x, int y) {
+		this.move = new Move(x, y);
 	}
 	
 	@Override
 	public void onEntry(StateTransition e) {
 		super.onEntry(e);
-		server = serverFactory.createServer(this, stateMachine);
-		lblState.setText("");
+		server.start();
 	}
 	
 	@Override
 	public void update() {
-		if (server == null) {
-			return;
-		}
-		if (!server.isGameOver()) {
+		if (isRunning && !server.isGameOver()) {
 			server.update();
 		}
 	}

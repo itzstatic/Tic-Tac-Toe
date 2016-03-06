@@ -3,8 +3,8 @@ package com.brandon.tictactoe.test;
 import java.util.Scanner;
 
 import com.brandon.tictactoe.Player;
-import com.brandon.tictactoe.game.Move;
 import com.brandon.tictactoe.game.State;
+import com.brandon.tictactoe.game.Move;
 
 public class TestPlayer implements Player {
 
@@ -58,4 +58,5 @@ public class TestPlayer implements Player {
 		}
 		System.out.println();
 	}
+
 }

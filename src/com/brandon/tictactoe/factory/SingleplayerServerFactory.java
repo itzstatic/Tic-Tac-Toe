@@ -13,11 +13,16 @@ import com.brandon.tictactoe.ui.screen.ScreenPlayGame;
 public class SingleplayerServerFactory implements ServerFactory {
 	
 	@Override
-	public Server createServer(ScreenPlayGame spg, StateMachine screenMachine) {
+	public Server create(StateMachine screenMachine) {
 		return new LocalServer(
 			((ScreenCreateGame) screenMachine.getState("ScreenCreateGame")).getGame(),
-			new LocalPlayer(spg),
+			new LocalPlayer((ScreenPlayGame) screenMachine.getState("ScreenPlayGame")),
 			new AIPlayer()
 		);
+	}
+	
+	@Override
+	public void destroy() {
+		
 	}
 }

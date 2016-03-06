@@ -3,8 +3,8 @@ package com.brandon.tictactoe.player;
 import java.util.Random;
 
 import com.brandon.tictactoe.Player;
-import com.brandon.tictactoe.game.Move;
 import com.brandon.tictactoe.game.State;
+import com.brandon.tictactoe.game.Move;
 
 public class AIPlayer implements Player {
 

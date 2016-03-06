@@ -11,11 +11,17 @@ import com.brandon.tictactoe.ui.screen.ScreenPlayGame;
 
 public class HotseatServerFactory implements ServerFactory {
 	@Override
-	public Server createServer(ScreenPlayGame spg, StateMachine screenMachine) {
+	public Server create(StateMachine screenMachine) {
+		ScreenPlayGame spg = (ScreenPlayGame) screenMachine.getState("ScreenPlayGame");
 		return new LocalServer(
 			((ScreenCreateGame) screenMachine.getState("ScreenCreateGame")).getGame(),
 			new LocalPlayer(spg),
 			new LocalPlayer(spg)
 		);
+	}
+	
+	@Override
+	public void destroy() {
+		
 	}
 }

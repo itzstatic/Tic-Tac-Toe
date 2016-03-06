@@ -9,8 +9,8 @@ import java.net.Socket;
 
 import com.brandon.tictactoe.Player;
 import com.brandon.tictactoe.Server;
-import com.brandon.tictactoe.game.Move;
 import com.brandon.tictactoe.game.State;
+import com.brandon.tictactoe.game.Move;
 /**
  * Represents a player over a network, from the perspective of a Server.
  * @author Brandon
@@ -46,13 +46,15 @@ public class RemotePlayer implements Player, Closeable {
 		return new Move(x, y);
 	}
 	
+	public void open() throws IOException {
+		socket = serverSocket.accept();
+		in = socket.getInputStream();
+		out = socket.getOutputStream();
+	}
+	
 	@Override
 	public void gameStart(int width, int height, int win, State you) {
 		try {
-			socket = serverSocket.accept();
-			in = socket.getInputStream();
-			out = socket.getOutputStream();
-			
 			out.write(width);
 			out.write(height);
 			out.write(win);
@@ -102,9 +104,15 @@ public class RemotePlayer implements Player, Closeable {
 
 	@Override
 	public void close() throws IOException {
-		out.close();
-		in.close();
-		socket.close();
+		if (out != null) {
+			out.close();
+		}
+		if (in != null) {
+			in.close();
+		}
+		if (socket != null) {
+			socket.close();
+		}
 		serverSocket.close();
 	}
 	

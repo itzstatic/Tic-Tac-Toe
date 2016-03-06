@@ -9,8 +9,8 @@ import java.net.Socket;
 
 import com.brandon.tictactoe.Player;
 import com.brandon.tictactoe.Server;
-import com.brandon.tictactoe.game.Move;
 import com.brandon.tictactoe.game.State;
+import com.brandon.tictactoe.game.Move;
 
 /**
  * Translates from a Player's input to another server over a network.
@@ -29,21 +29,8 @@ public class RemoteServer implements Server, Closeable {
 	
 	private Player player;
 	
-	public RemoteServer(InetAddress ip, int port, Player player) {
+	public RemoteServer(Player player) {
 		this.player = player;
-		try {
-			socket = new Socket(ip, port);
-			in = socket.getInputStream();
-			out = socket.getOutputStream();
-			
-			width = in.read();
-			height = in.read();
-			int win = in.read();
-			State state = State.deserialize(in.read());
-			player.gameStart(width, height, win, state);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	private State[][] readBoard() throws IOException{
@@ -54,6 +41,25 @@ public class RemoteServer implements Server, Closeable {
 			}
 		}
 		return board;
+	}
+	
+	public void open(InetAddress ip, int port) throws IOException {
+		socket = new Socket(ip, port);
+		in = socket.getInputStream();
+		out = socket.getOutputStream();
+	}
+	
+	@Override
+	public void start() {
+		try {
+			width = in.read();
+			height = in.read();
+			int win = in.read();
+			State state = State.deserialize(in.read());
+			player.gameStart(width, height, win, state);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -84,22 +90,19 @@ public class RemoteServer implements Server, Closeable {
 
 	@Override
 	public void close() throws IOException {
-		out.close();
-		in.close();
-		socket.close();
+		if (out != null) {
+			out.close();
+		}
+		if (in != null) {
+			in.close();
+		}
+		if (socket != null) {
+			socket.close();
+		}
 	}
 
 	@Override
 	public boolean isGameOver() {
 		return winner != null;
-	}
-	
-	@Override
-	public void setGameOver() {
-		try {
-			close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 }

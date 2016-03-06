@@ -4,13 +4,18 @@ import java.awt.GridLayout;
 
 import javax.swing.JPanel;
 
-import com.brandon.tictactoe.game.Move;
 import com.brandon.tictactoe.game.State;
+import com.brandon.tictactoe.ui.screen.ScreenPlayGame;
 
+@SuppressWarnings("serial")
 public class JBoardPanel extends JPanel {
 	
+	private ScreenPlayGame spg;
 	private JSquarePanel[][] squares;
-	private volatile Move move;
+	
+	public JBoardPanel(ScreenPlayGame spg) {
+		this.spg = spg;
+	}
 
 	public void gameStart(int width, int height) {
 		squares = new JSquarePanel[width][height];
@@ -32,13 +37,6 @@ public class JBoardPanel extends JPanel {
 		}
 	}
 	
-	public Move getMove() {
-		while (move == null);
-		Move move = this.move;
-		this.move = null;
-		return move;
-	}	
-	
 	public void gameOver() {
 		for (int y = 0; y < squares[0].length; y++) {
 			for (int x = 0; x < squares.length; x++) {
@@ -47,8 +45,7 @@ public class JBoardPanel extends JPanel {
 		}
 	}
 	
-	
-	void setMove(int x, int y) {
-		move = new Move(x, y);
+	public void setMove(int x, int y) {
+		spg.setMove(x, y);
 	}
 }
