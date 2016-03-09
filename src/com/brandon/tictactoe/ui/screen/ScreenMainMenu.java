@@ -40,11 +40,8 @@ public class ScreenMainMenu extends SwingScreen {
 			System.exit(0);
 		});
 		
-		JLabel lblTitle = new JLabel("Tic Tac Toe");
-		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		
 		setLayout(new GridLayout(5, 1));
-		add(lblTitle);
+		add(new JLabel("Tic Tac Toe", SwingConstants.CENTER));
 		add(btnSingle);
 		add(btnMulti);
 		add(btnHotseat);

@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.text.JTextComponent;
 
 import org.teamresistance.util.state.StateTransition;
@@ -62,7 +63,7 @@ public class ScreenCreateGame extends SwingScreen {
 		pnlControls.add(btnNext);
 		
 		setLayout(new GridLayout(5, 1));
-		add(new JLabel("Create Game"));
+		add(new JLabel("Create Game", SwingConstants.CENTER));
 		add(panels[0]);
 		add(panels[1]);
 		add(panels[2]);

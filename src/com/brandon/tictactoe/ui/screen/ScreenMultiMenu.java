@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 import com.brandon.tictactoe.ServerFactory;
 import com.brandon.tictactoe.factory.HostServerFactory;
@@ -34,7 +35,7 @@ public class ScreenMultiMenu extends SwingScreen {
 		btnJoin.addActionListener(this::joinServer);
 		
 		setLayout(new GridLayout(4, 1));
-		add(new JLabel("Multiplayer"));
+		add(new JLabel("Multiplayer", SwingConstants.CENTER));
 		add(btnHost);
 		add(btnJoin);
 		add(btnBack);

@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import org.teamresistance.util.state.StateTransition;
 
@@ -39,7 +40,7 @@ public class ScreenChoosePort extends SwingScreen {
 		pnlControls.add(btnNext);
 		
 		setLayout(new GridLayout(3, 1));
-		add(new JLabel("Enter Port"));
+		add(new JLabel("Enter Port", SwingConstants.CENTER));
 		add(pnlPort);
 		add(pnlControls);
 	}
