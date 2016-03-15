@@ -12,7 +12,7 @@ public class StateTransition {
 	/**
 	 * Returns the state object that the state machine was in previous to this state transition,
 	 * or null, if the state machine was not initialized at that time.
-	 * @return
+	 * @return the initial state
 	 */
 	public State getInitialState() {
 		return initialState;

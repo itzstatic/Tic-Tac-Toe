@@ -81,7 +81,13 @@ public class ScreenPlayGame extends SwingScreen {
 		lblState.setText(state.toString());
 		pnlBoard.setEnabled(true);
 		
-		while(this.move == IDLE);
+		while(this.move == IDLE) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		Move move = this.move;
 		this.move = IDLE;
 		

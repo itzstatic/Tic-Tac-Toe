@@ -4,7 +4,6 @@ package org.teamresistance.util.state;
  * An instance of State represents the state of the machine on a continuous interval of time, 
  * during which, the machine did not change state.
  * 
- * 
  * @author Mathis
  *
  */

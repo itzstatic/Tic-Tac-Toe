@@ -32,7 +32,7 @@ public class ScreenChoosePort extends SwingScreen {
 		txtPort.addActionListener(this::onEnter);
 		
 		JPanel pnlPort = new JPanel();
-		pnlPort.add(new JLabel("Port: "));
+		pnlPort.add(new JLabel("Port: ", SwingConstants.CENTER));
 		pnlPort.add(txtPort);
 		
 		JPanel  pnlControls = new JPanel();

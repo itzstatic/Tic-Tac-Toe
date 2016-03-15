@@ -29,7 +29,13 @@ public abstract class UpdatableApplication implements Runnable {
 			initialTime = Time.getTime();
 			Time.update();
 			this.update();
-			while (Time.getTime() - initialTime < timePeriod);
+			while (Time.getTime() - initialTime < timePeriod) {
+				try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 }
