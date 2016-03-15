@@ -1,5 +1,8 @@
 package com.brandon.tictactoe;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import javax.swing.JFrame;
 
 import org.teamresistance.util.state.StateMachine;

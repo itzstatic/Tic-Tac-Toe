@@ -47,8 +47,7 @@ public class LocalServer implements Server {
 		do {
 			move = players[current].getMove();
 			if (move == null) {
-				players[0].gameOver(null);
-				players[1].gameOver(null);
+				setGameOver(null);
 				return;
 			}
 		} while (!game.isInBounds(move) || !game.isEmpty(move));
@@ -62,8 +61,7 @@ public class LocalServer implements Server {
 			board = game.getBoard();
 			players[0].setBoard(board);
 			players[1].setBoard(board);
-			players[0].gameOver(winner);
-			players[1].gameOver(winner);
+			setGameOver(winner);
 			return;
 		}
 		
@@ -76,4 +74,12 @@ public class LocalServer implements Server {
 		return game.isGameOver();
 	}
 
+	private void setGameOver(State winner) {
+		new Thread(() -> {
+			players[0].gameOver(winner);
+		}).start();
+		new Thread(() -> {
+			players[0].gameOver(winner);
+		}).start();
+	}
 }
