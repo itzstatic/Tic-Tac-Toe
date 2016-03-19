@@ -105,7 +105,7 @@ public class ScreenPlayGame extends SwingScreen {
 			System.exit(0);
 		}
 		pnlBoard.gameOver();
-		gotoState("ScreenMainMenu");
+		gotoState("main");
 	}
 	
 	private void showGameOverMessage(State winner) {

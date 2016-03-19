@@ -17,13 +17,23 @@ public class JoinServerFactory implements ServerFactory {
 
 	private RemoteServer remote;
 	
+	private ScreenChooseIP scip;
+	private ScreenChoosePort scp;
+	private ScreenPlayGame spg;
+	
+	public JoinServerFactory(StateMachine screenMachine) {
+		this.scip = (ScreenChooseIP) screenMachine.getState("scip");
+		this.scp = (ScreenChoosePort) screenMachine.getState("scp");
+		this.spg = (ScreenPlayGame) screenMachine.getState("spg");
+	}
+	
 	@Override
-	public Server create(StateMachine screenMachine) throws InstantiationException {
-		remote = new RemoteServer(new LocalPlayer((ScreenPlayGame) screenMachine.getState("ScreenPlayGame")));
+	public Server create() throws InstantiationException {
+		remote = new RemoteServer(new LocalPlayer(spg));
 		try {
 			remote.open(
-				((ScreenChooseIP) screenMachine.getState("ScreenChooseIP")).getInetAddress(),
-				((ScreenChoosePort) screenMachine.getState("ScreenChoosePort")).getPort()
+				scip.getInetAddress(),
+				scp.getPort()
 			);
 		} catch (SocketException se) {
 			throw new InstantiationException();

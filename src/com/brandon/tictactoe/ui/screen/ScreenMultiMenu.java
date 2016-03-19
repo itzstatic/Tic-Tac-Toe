@@ -9,8 +9,6 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import com.brandon.tictactoe.ServerFactory;
-import com.brandon.tictactoe.factory.HostServerFactory;
-import com.brandon.tictactoe.factory.JoinServerFactory;
 import com.brandon.tictactoe.ui.LinkedScreen;
 import com.brandon.tictactoe.ui.SwingScreen;
 
@@ -21,12 +19,9 @@ public class ScreenMultiMenu extends SwingScreen {
 	public ScreenMultiMenu(JFrame frame) {
 		super(frame);
 		
-		host = new HostServerFactory();
-		join = new JoinServerFactory();
-		
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(e -> {
-			gotoState("ScreenMainMenu");
+			gotoState("main");
 		});
 		JButton btnHost = new JButton("Host Server");
 		btnHost.addActionListener(this::hostServer);
@@ -42,28 +37,36 @@ public class ScreenMultiMenu extends SwingScreen {
 	}
 
 	private void hostServer(ActionEvent e) {
-		ScreenWait sw = (ScreenWait) stateMachine.getState("ScreenWait");
+		ScreenWait sw = (ScreenWait) stateMachine.getState("sw");
 		sw.setServerFactory(host);
 		LinkedScreen.link(
 			this,
-			(LinkedScreen) stateMachine.getState("ScreenCreateGame"),
-			(LinkedScreen) stateMachine.getState("ScreenChoosePort"),
+			(LinkedScreen) stateMachine.getState("scg"),
+			(LinkedScreen) stateMachine.getState("scp"),
 			sw,
-			(LinkedScreen) stateMachine.getState("ScreenPlayGame")
+			(LinkedScreen) stateMachine.getState("spg")
 		);
 		next();
 	}
 	
 	private void joinServer(ActionEvent e) {
-		ScreenWait sw = (ScreenWait) stateMachine.getState("ScreenWait");
+		ScreenWait sw = (ScreenWait) stateMachine.getState("sw");
 		sw.setServerFactory(join);
 		LinkedScreen.link(
 			this,
-			(LinkedScreen) stateMachine.getState("ScreenChooseIP"),
-			(LinkedScreen) stateMachine.getState("ScreenChoosePort"),
+			(LinkedScreen) stateMachine.getState("scip"),
+			(LinkedScreen) stateMachine.getState("scp"),
 			sw,
-			(LinkedScreen) stateMachine.getState("ScreenPlayGame")
+			(LinkedScreen) stateMachine.getState("spg")
 		);
 		next();
+	}
+	
+	public void setHostFactory(ServerFactory host) {
+		this.host = host;
+	}
+	
+	public void setJoinFactory(ServerFactory join) {
+		this.join = join;
 	}
 }

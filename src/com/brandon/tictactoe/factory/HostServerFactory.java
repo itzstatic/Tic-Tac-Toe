@@ -18,9 +18,19 @@ public class HostServerFactory implements ServerFactory {
 
 	private RemotePlayer remote;
 	
+	private ScreenCreateGame scg;
+	private ScreenChoosePort scp;
+	private ScreenPlayGame spg;
+	
+	public HostServerFactory(StateMachine screenMachine) {
+		this.scg = (ScreenCreateGame) screenMachine.getState("scg");
+		this.scp = (ScreenChoosePort) screenMachine.getState("scp");
+		this.spg = (ScreenPlayGame) screenMachine.getState("spg");
+	}
+	
 	@Override
-	public Server create(StateMachine screenMachine) throws InstantiationException {
-		remote = new RemotePlayer(((ScreenChoosePort) screenMachine.getState("ScreenChoosePort")).getPort());
+	public Server create() throws InstantiationException {
+		remote = new RemotePlayer(scp.getPort());
 		try {
 			remote.open();
 		} catch (SocketException se) {
@@ -30,8 +40,8 @@ public class HostServerFactory implements ServerFactory {
 		}
 		
 		return new LocalServer(
-			((ScreenCreateGame) screenMachine.getState("ScreenCreateGame")).getGame(),
-			new LocalPlayer((ScreenPlayGame) screenMachine.getState("ScreenPlayGame")),
+			scg.getGame(),
+			new LocalPlayer(spg),
 			remote
 		);
 	}

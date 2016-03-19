@@ -9,8 +9,6 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import com.brandon.tictactoe.ServerFactory;
-import com.brandon.tictactoe.factory.HotseatServerFactory;
-import com.brandon.tictactoe.factory.SingleplayerServerFactory;
 import com.brandon.tictactoe.ui.LinkedScreen;
 import com.brandon.tictactoe.ui.SwingScreen;
 
@@ -21,15 +19,12 @@ public class ScreenMainMenu extends SwingScreen {
 	public ScreenMainMenu(JFrame frame) {
 		super(frame);
 		
-		single = new SingleplayerServerFactory();
-		hotseat = new HotseatServerFactory();
-		
 		JButton btnSingle = new JButton("Singleplayer");
 		btnSingle.addActionListener(this::playSingleplayer);
 
 		JButton btnMulti = new JButton("Multiplayer");
 		btnMulti.addActionListener(e -> {
-			gotoState("ScreenMultiMenu");
+			gotoState("multi");
 		});
 		
 		JButton btnHotseat = new JButton("Hotseat");
@@ -49,23 +44,30 @@ public class ScreenMainMenu extends SwingScreen {
 	}
 	
 	private void playSingleplayer(ActionEvent e) {
-		((ScreenWait) stateMachine.getState("ScreenWait")).setServerFactory(single);
+		((ScreenWait) stateMachine.getState("sw")).setServerFactory(single);
 		play();
 	}
 	
 	private void playHotseat(ActionEvent e) {
-		((ScreenWait) stateMachine.getState("ScreenWait")).setServerFactory(hotseat);
+		((ScreenWait) stateMachine.getState("sw")).setServerFactory(hotseat);
 		play();
 	}
 	
 	private void play() {
 		LinkedScreen.link(
 			this,
-			(LinkedScreen) stateMachine.getState("ScreenCreateGame"),
-			(LinkedScreen) stateMachine.getState("ScreenWait"),
-			(LinkedScreen) stateMachine.getState("ScreenPlayGame")
+			(LinkedScreen) stateMachine.getState("scg"),
+			(LinkedScreen) stateMachine.getState("sw"),
+			(LinkedScreen) stateMachine.getState("spg")
 		);
 		next();
 	}
 	
+	public void setSingleFactory(ServerFactory single) {
+		this.single = single;
+	}
+	
+	public void setHotseatFactory(ServerFactory hotseat) {
+		this.hotseat = hotseat;
+	}
 }

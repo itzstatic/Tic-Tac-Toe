@@ -62,16 +62,16 @@ public class ScreenWait extends SwingScreen {
 	
 	private void onMenu(ActionEvent e) {
 		serverFactory.destroy();
-		gotoState("ScreenMainMenu");
+		gotoState("main");
 	}
 
 	private void createServer() {
 		try {
-			server = serverFactory.create(stateMachine);
+			server = serverFactory.create();
 		} catch (InstantiationException ie) {
 			return;
 		}
-		((ScreenPlayGame) stateMachine.getState("ScreenPlayGame")).setServer(server);
+		((ScreenPlayGame) stateMachine.getState("spg")).setServer(server);
 		next();
 	}
 	
